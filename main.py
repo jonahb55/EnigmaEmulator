@@ -1,6 +1,9 @@
 import string
 import os
 import time
+import fcntl
+import termios
+import struct
 from display import Display
 from devices import Plugboard, Rotor, Reflector
 import wiring
@@ -17,6 +20,10 @@ def clear():
   else:
     _ = os.system("cls")
 
+def terminal_size():
+  th, tw, hp, wp = struct.unpack('HHHH', fcntl.ioctl(0, termios.TIOCGWINSZ, struct.pack('HHHH', 0, 0, 0, 0)))
+  return tw, th
+
 def create_rotors(rotor_1, rotor_2, rotor_3):
   global rotor_numbers
   rotor_numbers = [rotor_1, rotor_2, rotor_3]
@@ -28,7 +35,7 @@ def create_rotors(rotor_1, rotor_2, rotor_3):
 
 def reset_screen():
   global screen
-  screen = Display(80, 31)
+  screen = Display(terminal_size()[0], 31)
   screen.fill("""
  
  
