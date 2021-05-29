@@ -128,8 +128,8 @@ if __name__ == "__main__":
   for i in range(len(plaintext)):
     plaintext_display = list(plaintext)
     if i < len(plaintext) - 1:
-      plaintext_display.insert(i + 1, "]")
-      plaintext_display.insert(i, "[")
+      plaintext_display.insert(i + 1, "}")
+      plaintext_display.insert(i, "{")
     plaintext_display = "".join(plaintext_display)
 
     reset_screen()
