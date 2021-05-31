@@ -47,14 +47,7 @@ def reset_screen():
     char = string.ascii_uppercase[i]
     screen.draw_text((0, i + 5), "   " + char + ("     " + char) * 8)
 
-def calc_input(input, key_text="", plaintext="", prev_ciphertext=""):
-  def calc_y(char):
-    return string.ascii_uppercase.index(char) + 5
-
-  # Move rotors to next position
-  rotors[2].rotate()
-
-  # Update key & rotors on screen
+def update_rotor_text():
   screen.draw_text((0, 0), key_text)
   screen.draw((15, 2), str(rotor_numbers[0]))
   screen.draw((27, 2), str(rotor_numbers[1]))
@@ -62,6 +55,14 @@ def calc_input(input, key_text="", plaintext="", prev_ciphertext=""):
   screen.draw((12, 3), rotors[0].position)
   screen.draw((24, 3), rotors[1].position)
   screen.draw((36, 3), rotors[2].position)
+
+def calc_input(input, key_text="", plaintext="", prev_ciphertext=""):
+  def calc_y(char):
+    return string.ascii_uppercase.index(char) + 5
+
+  # Move rotors to next position
+  rotors[2].rotate()
+  update_rotor_text()
 
   # Process through plugboard
   screen.draw_text((52, calc_y(input)), "<<< " + plaintext)
@@ -102,6 +103,9 @@ def calc_input(input, key_text="", plaintext="", prev_ciphertext=""):
 if __name__ == "__main__":
   key_text = ""
 
+  # Print title
+  print("          Enigma I Emulator          \n-------------------------------------")
+
   # Choose plugboard settings
   plugboard_wires = []
   while True:
@@ -126,6 +130,37 @@ if __name__ == "__main__":
   rotors[1].position = rotor_positions[1]
   rotors[2].position = rotor_positions[2]
   key_text += ", Positions=" + rotor_positions[:3]
+
+  plaintext = ""
+  ciphertext = ""
+  reset_screen()
+  update_rotor_text()
+  clear()
+  screen.print()
+  while True:
+    text = input()
+    if text == "":
+      plaintext = ""
+      ciphertext = ""
+      rotors[0].position = rotor_positions[0]
+      rotors[1].position = rotor_positions[1]
+      rotors[2].position = rotor_positions[2]
+    else:
+      valid_text = "".join([x for x in list(text.upper()) if x in string.ascii_uppercase])
+      for char in valid_text:
+        plaintext += char
+        reset_screen()
+        ciphertext += calc_input(char, key_text, plaintext, ciphertext)
+        clear()
+        screen.print()
+        time.sleep(1)
+      if len(valid_text) > 0:
+        continue
+    reset_screen()
+    update_rotor_text()
+    clear()
+    screen.print()
+
 
   # Enter plaintext
   plaintext = input("Enter plaintext: ")
