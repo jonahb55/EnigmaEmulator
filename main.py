@@ -144,3 +144,4 @@ if __name__ == "__main__":
     clear()
     screen.print()
     time.sleep(1)
+  input()
