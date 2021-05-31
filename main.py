@@ -150,7 +150,7 @@ if __name__ == "__main__":
       for char in valid_text:
         plaintext += char
         reset_screen()
-        ciphertext += calc_input(char, key_text, plaintext, ciphertext)
+        ciphertext += calc_input(char, key_text, plaintext.lower(), ciphertext)
         clear()
         screen.print()
         time.sleep(1)
@@ -160,23 +160,3 @@ if __name__ == "__main__":
     update_rotor_text()
     clear()
     screen.print()
-
-
-  # Enter plaintext
-  plaintext = input("Enter plaintext: ")
-  plaintext = "".join([x for x in list(plaintext.upper()) if x in string.ascii_uppercase])
-
-  ciphertext_display = ""
-  for i in range(len(plaintext)):
-    plaintext_display = list(plaintext)
-    if i < len(plaintext) - 1:
-      plaintext_display.insert(i + 1, "}")
-      plaintext_display.insert(i, "{")
-    plaintext_display = "".join(plaintext_display)
-
-    reset_screen()
-    ciphertext_display += calc_input(plaintext[i], key_text, plaintext_display, ciphertext_display)
-    clear()
-    screen.print()
-    time.sleep(1)
-  input()
